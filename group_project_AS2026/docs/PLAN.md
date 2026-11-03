@@ -18,7 +18,7 @@
 
 | Done | Still open (week 0 items that slipped) |
 |---|---|
-| Handouts and data dictionary saved in the repo. Coaching question sheet and plain-language explainer written. Coaching answers recorded. First data check: leads for the audit found. Starter notebook runs. | Roles confirmed by all three. Group name chosen. Notebook copy created. Both teammates have read the explainer. |
+| Handouts and data dictionary saved in the repo. Coaching question sheet and plain-language explainer written. Coaching answers recorded. Task (a) drafted in the solution notebook (audit, treatments, formation panel; reviewed by Claude, waiting for your review in Colab). Starter notebook runs. | Roles confirmed by all three. Group name chosen. Notebook copy created. Both teammates have read the explainer. |
 
 ## 3. Roles (proposal until all three confirm)
 
@@ -89,7 +89,7 @@ The lecturer said there is a lot of leeway: any method is fine if it is consiste
 
 ## 9. Support from Claude
 
-- Drafts the notebook cells in a new copy next to the starter (Group_Work_AS_2026_solution.ipynb), runs them locally on the repo data to check they work, and commits. Nothing is pushed without asking.
+- Drafts the notebook cells in group_project_AS2026/notebook/Group_Work_AS_2026_solution.ipynb (a copy of the starter, which stays untouched), runs them locally on the repo data to check they work, and commits. Nothing is pushed without asking.
 - You review each block, run it in Colab and give feedback. You own every cell, so Claude explains each block in plain terms.
 - Writes the results sheet and the plain-language guide for each task, with numbers checked against the data.
 - Prepares an outline for "What would change with real data" (15 points) so B can start early.

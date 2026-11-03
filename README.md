@@ -48,6 +48,7 @@ A collection of Python and R notebooks for teaching and practicing core data sci
     - mortgages.csv
     - README.md
   - LICENSE_ATTRIBUTION.md
+- group_project_AS2026/ (our work on the AS 2026 group assignment: solution notebook, results sheets, plan and handouts; see its README)
 - docs/
   - superpowers/
     - specs/ (design documents)
