@@ -7,11 +7,13 @@ https://github.com/umatter/EDFB/tree/main/data/esg2026; a copy is in `../data/es
 | Folder | Content |
 |---|---|
 | `notebook/` | `Group_Work_AS_2026_solution.ipynb`: the starter notebook with our own cells for tasks (a) to (d) below Section 5 |
-| `results_sheets/` | One PDF per finished task: the results sheet and a plain-language guide for the memo and slides |
-| `docs/` | Assignment handouts, group plan, team briefing, coaching question sheet and explainer |
+| `results_sheets/` | One PDF per task (a to d): results, meaning for an investor, suggested memo and slide text, plain-language guide, likely questions; `figures/` holds the notebook's figures for the memo and slides |
+| `docs/` | Assignment handouts, group plan, team briefing, coaching question sheet and explainer, and `Outline_for_Laurin_Group_8` (detailed memo, slide and Q&A outline) |
 
 Open the notebook in Colab:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FBE5d5wqfds/EAIF-/blob/main/group_project_AS2026/notebook/Group_Work_AS_2026_solution.ipynb)
+
+Group name: **Group_8** (Beyeler Fabian, Lussi Laurin, Griessen Jan).
 
 Key dates: coaching Tue 24 Nov 2026; memo, notebook, results.json and peer evaluation due Fri 27 Nov 2026 23:59;
 slides Mon 7 Dec 2026 23:59; presentation Tue 8 Dec 2026. See `docs/PLAN.md`.
