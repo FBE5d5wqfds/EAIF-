@@ -1,8 +1,8 @@
 # Detailed outline for Laurin: memo, slides and peer evaluation
 
-*Group_8 (Beyeler Fabian, Lussi Laurin, Griessen Jan). EAIF Group Assignment AS 2026. Written 3 November 2026. All analysis is finished; every number below comes from the executed notebook.*
+*Group_8 (Beyeler Fabian, Lussi Laurin, Griessen Jan). EAIF Group Assignment AS 2026. Updated 4 November 2026 after an independent review. All analysis is finished; every number below comes from the executed notebook.*
 
-> ****How to use this outline.** It tells you what each page of the memo must contain, which numbers to use (and where each one is computed in the notebook), wording you can edit, and what not to say. The four results sheets (tasks a to d, in the folder results_sheets/) hold the detailed numbers, figures and explanations; the plan is in docs/PLAN.md. You do not need to code. If a number looks odd, ask Fabian before you write it down.**
+> **How to use this outline.** It tells you what each page of the memo must contain, which numbers to use (and where each one is computed in the notebook), wording you can edit, and what not to say. The four results sheets (tasks a to d, in the folder results_sheets/) hold the detailed numbers, figures and explanations; the plan is in docs/PLAN.md. You do not need to code. If a number looks odd, ask Fabian before you write it down.
 
 ## 1. Deadlines and hand-in checklist
 
@@ -48,6 +48,20 @@ The lecturer confirmed that tables and figures count towards the three pages. Us
 
 > If page 3 is too full, shorten section 5 by moving the "list" into the table of conclusions, but keep both halves: 5 points are for the list, 10 for which conclusions survive and why.
 
+**Word budget.** With the tables and one figure, three pages hold about **1,200 words of running text**. The suggested texts in this outline and on the results sheets add up to more than that on purpose: they give you material to choose from, not text to paste in full. Keep to the budget below and move the rest to the appendix or to your notes for the questions.
+
+| Section | Words | Tables |
+|---|---|---|
+| Title block, 1 Question and short answer | 120 |  |
+| 2 Data | 80 |  |
+| 3 Audit (two sentences around the table) and pipeline | 180 | Audit table (4 columns, 7 rows); compact feature table |
+| 4(b) Model comparison | 120 | Train / CV / test table (4 rows) |
+| 4(c) Where ESG pays | 130 | Region by period table (8 rows) |
+| 4(d) Backtest with costs and the floor | 140 | Backtest table (4 rows) |
+| 5 What would change with real data | 380 | Optional: a compact survive / not table |
+| 6 Group members and roles | 40 |  |
+| **Total** | **about 1,190** |  |
+
 ## 4. Memo, section by section
 
 ### Title block (page 1, top)
@@ -67,41 +81,49 @@ The lecturer confirmed that tables and figures count towards the three pages. Us
 
 ### 3. The audit and the pipeline (page 1 bottom to page 2 top)
 
-**Audit (compact table, three columns: problem / treatment / effect on one number).** Use short phrases; the long version is appendix A1. Rows and numbers (source: notebook (a) Step 10):
+**Audit table: the four columns the handout requires (issue, how detected, how treated, effect on one headline number).** Use short phrases; the long version is appendix A1. Rows and numbers (source: notebook (a) Step 10):
 
-| Problem | Treatment | Effect on one headline number |
-|---|---|---|
-| 28 firms: revenue and market cap about 1,000x too large (probably USD thousand) | Divide by 1,000 | Mean market cap 213,205 to 14,108 USD million |
-| 300 near-duplicate return months | Keep first row | Firm-years with a full 12 months: 9,002 to 9,182 |
-| Analyst_Outlook carries future information (rank correlation 0.68 with the next 12 months, about 0 with other windows) | Exclude from all models | Random forest test error 37.6 without it, 29.1 with it (baseline 37.2) |
-| Survivorship: universe file has 987 of 1,376 firms | Use the full panel, hold exits to their last month | Equal-weight benchmark 4.62% (full panel) vs 5.18% (survivors only) |
-| Restated scores contain hindsight | Point-in-time scores everywhere; restated only for the comparison | Within-year rank correlation with next excess return 0.010 vs 0.056 |
-| Carbon, water, energy missing together (13.2% of rows), not at random | Keep rows, carbon intensity filled plus a missing flag | Linear test error 38.10 to 38.05 without carbon features |
-| Scores clipped at 0 or 100 (213 rows, 1.5%), 8 returns at -95% | Keep, document | Linear test error 38.10 to 38.00 without clipped rows |
+| Issue | How detected | How treated | Effect on one headline number |
+|---|---|---|---|
+| 28 firms: revenue and market cap about 1,000x too large (probably USD thousand) | Carbon, water and energy out of line with revenue for the same firms | Divide by 1,000 | Mean market cap 213,205 to 14,108 USD million |
+| 300 near-duplicate return months | Duplicate company-month keys | Keep first row | Firm-years with a full 12 months: 9,002 to 9,182 |
+| Analyst_Outlook carries future information | Rank correlation with the return in three 12-month windows: 0.68 with the next, about 0 with the others | Exclude from all models | Random forest test error 37.6 without it, 29.1 with it (baseline 37.2) |
+| Survivorship: universe file has 987 of 1,376 firms | File sizes; 389 firms end before 2025 | Use the full panel, hold exits to their last month | Equal-weight benchmark 4.62% (full panel) vs 5.18% (survivors only), formation years 2015 to 2025 |
+| Restated scores behave as if they contain hindsight | Comparison of the two score files with later returns | Point-in-time scores everywhere; restated only for the comparison | Within-year rank correlation with next excess return 0.010 vs 0.056 |
+| Carbon, water, energy missing together (13.2% of rows), not at random | Missing share by region and by score | Keep rows, carbon intensity filled plus a missing flag | Linear test error 38.10 to 38.05 without carbon features |
+| Scores clipped at 0 or 100 (213 rows, 1.5%), 8 returns at -95% | Counts at the bounds | Keep, document | Linear test error 38.10 to 38.00 without clipped rows |
 
-- **Say how each was found in one phrase** (the detail is in appendix A1): consistency of carbon, water and energy with revenue; duplicate keys; correlation with the return in three 12-month windows; file sizes; comparison of the two score files; missing share by region and score; counts at the bounds. Add the sentence from the notebook: "Each effect was measured one problem at a time, so the effects do not add up."
+- Add the sentence from the notebook below the table: "Each effect was measured one problem at a time, so the effects do not add up."
 - **Pipeline (5 to 6 lines).** Portfolios are formed on 1 July of each year; every feature comes from the fiscal-year row published between 31 March and 31 May (known before 1 July) or from returns up to June; the target is the total return over the next 12 months. Split by formation year: training 2015 to 2021, test 2022 to 2024 (the test set is used once); cross-validation by company inside the training years. Mention the decision-time check built into the code: nothing is used before its publication date.
 - **Feature table (compact, 8 pt):** group the given features in one row ("given: growth, margin, four ESG scores, size, past 12-month return, industry and region"), then one row each for the six new features with the date from which each is known: Env_Change, Margin_Change, log_MC_to_Rev, log_Carbon_Int, Carbon_Missing (all from the fiscal-year row, known by 31 May of the formation year) and Past_Vol_Pct (returns through 30 June). Analyst_Outlook as the row "excluded". Full table: appendix A2 (notebook (a) Step 9).
 
 ### 4(b). Model comparison (about 0.35 page)
 
-- **Text:** use the memo paragraph on results sheet (b). Put the four-row table next to the baseline: baseline 37.20 test RMSE; linear 38.10; random forest 37.93; gradient boosting 37.84; CV 29.16 / 28.88 / 28.92 / 28.90.
+- **Text:** use the memo paragraph on results sheet (b). The handout asks for train, CV and test error next to the baseline, so the table needs all three columns:
+
+| Model | Train RMSE | CV RMSE | Test RMSE |
+|---|---|---|---|
+| Naive mean (baseline) | 29.16 | 29.16 | 37.20 |
+| Linear regression (selected on CV) | 28.73 | 28.88 | 38.10 |
+| Random forest (tuned) | 28.11 | 28.92 | 37.93 |
+| Gradient boosting (tuned) | 28.28 | 28.90 | 37.84 |
+
 - **The one sentence the handout wants:** "The extra complexity of the ensembles does not pay off out of sample."
-- **Must-have honesty notes:** (1) the selection of linear regression is effectively a tie (within 0.06 points); (2) the test years were a +21% boom (against +0.9% in training), so cross-validation (28.9) looks far better than the test (37 to 38); the starter notebook's "downturn" is wrong for this data; (3) after removing year averages the models still do not beat zero, rank correlation about -0.02 and changing sign.
+- **Must-have honesty notes:** (1) the selection of linear regression is effectively a tie (within 0.05 points; the best model changes from fold to fold), and linear regression has nothing to tune; (2) the test years were a +21% boom (against +0.9% in training), so cross-validation (28.9) looks far better than the test (37 to 38); the starter notebook's "downturn" is wrong for this data; (3) after removing year averages the models still do not beat zero, rank correlation about -0.02 and changing sign; (4) validated in time order inside the training years, no model beats the naive forecast either ((b) Step 6), which fits the test result.
 - **Translate for the committee:** an error of 37 to 38 points on 12-month returns means these forecasts cannot size or rank positions.
 
 ### 4(c). Where does ESG pay (about 0.4 page)
 
 - **Text:** use the memo paragraph on results sheet (c). The deliverable is one table (region by period, point-in-time and restated) and one sentence. Compact table: 7 regions plus "All regions", four columns, coefficient with standard error in brackets, stars. Full table with intervals and p-values: appendix A5.
-- **The sentence (copy from results.json):** "An investor could have earned an ESG premium only in European firms from 2021 (+3.1 points of 12-month excess return per standard deviation of the Environmental score, Holm-adjusted p = 0.018); no other region or period is distinguishable from zero, the estimate rests on only 4 formation years and is a cross-sectional association, not a return shown to be tradable after costs."
-- **Honest uncertainty (4 points):** 1 of 14 cells; four formation years (p about 0.09 with years as the unit); intervals not adjusted for the 14 cells; the premium shows from 2022 (2021 is +0.35).
-- **Point-in-time vs restated (3 points):** restated scores give higher coefficients everywhere and more significant cells, because the restatement behaves as if it contains hindsight (rank correlation 0.16 with the next return). Say "behaves as if", not "contains".
+- **The sentence (copy from results.json):** "An investor could have earned an ESG premium only in firms in Europe, from 2021 (+3.1 points of 12-month excess return per standard deviation of the Environmental score; Holm-adjusted p = 0.018 with errors clustered by company, but p = 0.09 with its 4 formation years as the unit); no other region or period is distinguishable from zero, so this is a plausible, not a proven, premium, and it is a cross-sectional association, not a return shown to be tradable after costs."
+- **Honest uncertainty (4 points):** 1 of 14 cells; Holm 0.018 holds only with errors clustered by company, with the four formation years as the unit p is about 0.09; intervals not adjusted for the 14 cells; the premium shows from 2022 (2021 is +0.35).
+- **Point-in-time vs restated (3 points):** restated scores give higher coefficients everywhere (by 0.9 to 2.5 points) and, before the Holm correction, more significant cells (3 against 1). After the correction both versions keep only Europe from 2021, at +4.88 restated against +3.08 point-in-time. The reason: the restatement behaves as if it contains hindsight (what it added has a rank correlation of 0.16 with the next return). Say "behaves as if", not "contains".
 
 ### 4(d). Backtest with costs and an ESG floor (about 0.3 page)
 
 - **Text:** use the memo paragraph on results sheet (d). Compact table with the four rows (no floor, floor 50th, floor 80th, benchmark): return, volatility, Sharpe, turnover. Figure d1 goes to appendix A6; refer to it.
-- **The sentence:** "The floor did not cost return in this sample (it cost concentration and trading), and the best rule's Sharpe advantage over the benchmark (+0.11, 95% interval -0.16 to +0.38) is not distinguishable from noise."
-- **Must-have notes:** the model used is the one selected in (b) and has almost no ranking skill (rank correlation +0.01); the 80th-percentile floor holds about 19 names; the clean out-of-sample years 2022 to 2024 tell the same story; gradient boosting and a linear variant are labelled robustness checks; costs are the starter's 20 bp convention (40 bp on the replaced share); benchmark is equal weight, no cost, full panel including exits.
+- **The sentence:** "The floor did not cost return in this sample (it cost concentration and trading), but the gain is not an ESG effect: every firm above the 80th percentile at equal weight earns about the benchmark (8.9% against 8.8%), and without formation year 2022 every rule trails the benchmark. The best rule's Sharpe advantage (+0.11, 95% interval -0.16 to +0.38) is not distinguishable from noise."
+- **Must-have notes:** the model used is the one selected in (b) and has almost no ranking skill (rank correlation +0.01); 11% to 19% of random selections of the same size do as well as the rules; the 80th-percentile floor holds about 19 names; formation year 2025 (six months) is left out, and including it lowers every rule by about 2 points without changing the ranking; the clean out-of-sample years 2022 to 2024 tell the same story; gradient boosting and a linear variant are labelled robustness checks; costs are the starter's 20 bp convention (40 bp on the replaced share); benchmark is equal weight, no cost, full panel including exits.
 
 ### 5. What would change with real data (about 0.6 page; 15 points). See the detailed content in the next section.
 
@@ -119,7 +141,7 @@ Write these as a compact list, one line each; the rightmost column is evidence f
 |---|---|---|
 | **ESG scores are proprietary and raters disagree** | Our data has one score per firm. Real providers use different methods and their scores correlate only moderately (published research reports an average correlation around 0.5 between major raters: Berg, Koelbel and Rigobon 2022; verify the figure before citing). A result for one rater may not hold for another. | Restated vs point-in-time: 86% overlap in the top decile, so 14% of the names change |
 | **Point-in-time availability** | Vendors revise and backfill scores. Without dated vintages we cannot know what an investor saw on 1 July. We had a publication date and a separate restated file; real data rarely does, and an Analyst_Outlook-type column would be hard to spot. | Restated scores behave as if they contain hindsight; Analyst_Outlook: test error 37.6 to 29.1 |
-| **Survivorship that is harder to see** | Our universe file betrayed itself (987 of 1,376 firms). Real databases silently drop delisted firms, and delisting returns (bankruptcy, takeover) are often missing. | Survivors-only benchmark overstates the return by about 0.6 points a year; -95% returns not in the last month |
+| **Survivorship that is harder to see** | Our universe file betrayed itself (987 of 1,376 firms). Real databases silently drop delisted firms, and delisting returns (bankruptcy, takeover) are often missing. | Survivors-only benchmark overstates the return by about 0.6 points a year (2015 to 2025; 0.46 over the 2018 to 2024 backtest); -95% returns not in the last month |
 | **Costs are not a constant** | We used 20 bp each way. Real costs depend on spread, size, liquidity, market stress and the size of the order; a concentrated 19-name portfolio is harder to trade. | Turnover 0.70 to 0.82; cost drag 0.28 to 0.33 points a year |
 | **Units, identifiers and duplicates** | We found a unit error and duplicates through cross-column checks. Real data has mergers, name changes, currency and restated fundamentals that are harder to detect. | 28 firms off by a factor of 1,000; 300 duplicated months |
 | **Missing ESG data is not random** | Companies choose what to disclose. Missingness related to the score and to region biases any sample that drops gaps, and it is lowest in Europe, the one region where we found an effect. | 13.2% missing; Europe 6.3% vs 13 to 19% elsewhere |
@@ -134,10 +156,10 @@ This is the larger part. Use a table: conclusion, survives or not, why, and what
 | No model beats the naive forecast out of sample | **Likely survives in direction** | Stock returns are weakly predictable; the signal-to-noise ratio is low everywhere. With real data and more years a small skill could appear, so the claim is "no evidence of skill", not "impossible". | Time-forward cross-validation over many years; several regimes; more features |
 | The specific data problems (unit error, duplicates, a leaking column) | **Do not survive as such** | They were planted. Real data has other problems. What survives is the procedure: consistency checks across columns, correlation with returns in several time windows, publication dates, comparison with a survivors-only file. | Run the same checks on the real vendor files and ask the vendor for documentation |
 | Survivors-only and restated data flatter results | **Direction survives, size does not** | Both mechanisms are real; their size depends on the exit rate, delisting returns and vendor practice. The 0.6 points a year is specific to this simulation. | Point-in-time constituent lists, delisting returns, data vintages |
-| Environmental score paid in Europe from 2021 (+3.1 points per SD) | **Does not survive as an investable conclusion** | The simulation planted one relationship; we found it. In real data a single cell out of 14, on four years, would need replication before anyone relied on it. The result may also reflect disclosure rules or regional events we cannot see here. | Out-of-sample replication on other years, other raters and other regions; a pre-registered hypothesis |
+| Environmental score paid in Europe from 2021 (+3.1 points per SD) | **Does not survive as an investable conclusion** | We cannot tell whether the cell reflects a relationship built into the simulation or chance (p about 0.09 with years as the unit). In real data a single cell out of 14, on four years, would need replication before anyone relied on it. The result may also reflect disclosure rules or regional events we cannot see here. | Out-of-sample replication on other years, other raters and other regions; a pre-registered hypothesis |
 | Restated scores overstate the premium | **Likely survives in direction** | Backfilled or revised scores can embed information that arrived later; any test on them is optimistic. The size cannot be known without vintages. | Compare strategies built on original versus revised scores |
 | Backtest: no edge distinguishable from the benchmark | **Survives, and net results get worse** | No edge before real costs means no edge after them. Real costs exceed our flat 20 bp, especially for a concentrated portfolio. | Backtest with spread- and size-dependent costs and capacity limits |
-| The ESG floor did not cost return | **Does not survive** | With 19 to 47 names the difference is noise, and in our data the score is unrelated to returns outside one cell. In real markets a floor shrinks the universe, concentrates the portfolio and raises tracking error. | Compare with random floors of the same size; report tracking error |
+| The ESG floor did not cost return | **Does not survive** | Even here the floor itself adds nothing (all firms above the 80th percentile earn about the benchmark); the gain comes from a few names in one year (2022). In real markets a floor shrinks the universe, concentrates the portfolio and raises tracking error. | Random selections of the same size (done here: 11% to 19% match the rules); tracking error; other years |
 | Cross-validation looks better than the test because the test years were a boom | **Survives as a lesson** | Models should be judged across regimes; random cross-validation mixes years and is optimistic. | Walk-forward evaluation over several market regimes |
 
 **Closing recommendation (two lines):** "We would not allocate on this evidence. Before relying on any ESG signal we would need several raters, dated vintages, delisting returns, realistic costs and an out-of-sample replication of the one finding."
@@ -159,6 +181,7 @@ This is the larger part. Use a table: conclusion, survives or not, why, and what
 | Audit table with effects | (a) Step 10 |
 | Model table, tuning grid, figures b1 and b2 | (b) Steps 1, 2 and 3 |
 | Printed reading of (b): within-year check, rank correlation by year | (b) Step 5 |
+| Fold-by-fold CV (linear beats baseline in 5 of 5 folds), validation in time order | (b) Step 6 |
 | Region by period table, figure c1 | (c) Steps 2 and 3 |
 | Restated vs point-in-time, joint regression | (c) Step 4 |
 | Europe in detail, year by year, years-as-unit p, figure c2 | (c) Step 5 |
@@ -166,6 +189,7 @@ This is the larger part. Use a table: conclusion, survives or not, why, and what
 | Backtest table, robustness, 2022 to 2024 only | (d) Step 2 |
 | Bootstrap intervals | (d) Step 3 |
 | Cumulative return figure d1 | (d) Step 4 |
+| Random selections, floor without forecast, without 2022, survivors 2018 to 2024, with 2025, block bootstrap | (d) Step 6 |
 | results.json (group name, members, all numbers) | Final cell at the end of the notebook |
 
 ## 7. Slides: 6 slides for 8 minutes (plus about 2 minutes of questions)
@@ -177,8 +201,8 @@ The lecturer asked for one slide that explains the audit. The slide count and so
 | 1 | **Question and data.** The question; "all data simulated"; five files, 1,376 firms, 2012 to 2025; citation and licence | 1:00 | "Can ESG scores, or models built on them, earn an investor a premium? We tested this on a simulated panel, so the exercise tests our method, not the market." |
 | 2 | **What we found in the data and what we did (the audit slide).** Compact table of 5 to 7 problems (problem, fix, effect); pipeline strip: 1 July rule, split 2015-2021 / 2022-2024, 30 dated features; figure a1 optional | 1:30 | "Seven problems. The most dangerous is a column that carries next year's return: a model using it cuts the test error from 37.6 to 29.1, but no investor had it on 1 July, so we excluded it." |
 | 3 | **No model beats the naive forecast.** The four-row table or figure b1 (left); line: test years +21% boom, rank correlation about -0.02 | 1:30 | "The models learn something in training but nothing that carries over. Complexity does not pay off." |
-| 4 | **ESG paid in one place: Europe from 2021.** Figure c1 or the 14-cell table with Europe from 2021 highlighted; line: 1 of 14 cells, four years, restated scores would show more cells | 1:15 | "+3.1 points per standard deviation, adjusted p 0.018. One cell, four years: plausible, not proven. Restated scores contain hindsight and would show more." |
-| 5 | **Backtest with an ESG floor.** Figure d1 (left) or the four-row table; line: Sharpe difference +0.11, interval -0.16 to +0.38 | 1:30 | "The floor did not cost return here; it cost concentration and trading. The edge over the benchmark is not distinguishable from noise." |
+| 4 | **ESG paid in one place: Europe from 2021.** Figure c1 or the 14-cell table with Europe from 2021 highlighted; line: 1 of 14 cells, four years, restated scores look stronger | 1:15 | "+3.1 points per standard deviation, adjusted p 0.018; with years as the unit p is about 0.09. One cell, four years: plausible, not proven. Restated scores behave as if they contain hindsight and look stronger." |
+| 5 | **Backtest with an ESG floor.** Figure d1 (left) or the four-row table; line: Sharpe difference +0.11, interval -0.16 to +0.38 | 1:30 | "The floor did not cost return here, but the floor itself adds nothing: the gain is a few names in one year, 2022. The edge over the benchmark is not distinguishable from noise." |
 | 6 | **What would change with real data.** The four named issues (raters disagree, point-in-time, survivorship, costs) and the survive / does not survive split; closing recommendation | 1:15 | "The method survives; the specific findings do not. We would not allocate on this evidence." |
 
 - **Rehearse twice with a timer** (Sat 5 and Mon 7 Dec). If you run over, cut slide 2 detail, never slide 6.
@@ -191,12 +215,13 @@ The lecturer asked for one slide that explains the audit. The slide count and so
 | Why divide by 1,000 and not drop the firms? | The environmental columns look normal for their size, so only revenue and market cap are wrong. Dropping loses 28 firms for nothing; the lecturer accepted any consistent, explained method. |
 | How do you know Analyst_Outlook leaks? | Rank correlation 0.68 with the next 12 months and about 0 with the two earlier windows, and a test error that falls from 37.6 to 29.1 when it is used. We say it behaves as if it were stamped with future information; the data cannot show how it arose. |
 | Why is the test error higher than the cross-validation error? | The test years were a boom (+21.6% against +0.9%), and cross-validation mixes years. Even after removing year averages the models show no skill. |
-| Why linear regression? | Lowest cross-validation error, but a tie within 0.06 points. We followed the rule set in advance and report gradient boosting as a labelled check. |
-| Is the Europe result real? | It is the only cell that survives a multiple-testing correction, but it rests on four years (p about 0.09 with years as the unit) and is an association, not a tradable return. |
+| Why linear regression? | Lowest cross-validation error, but a tie within 0.05 points; it has nothing to tune. We followed the rule set in advance and report gradient boosting as a labelled check. |
+| Is the Europe result real? | It is the only cell that survives a multiple-testing correction with errors clustered by company, but it rests on four years (p about 0.09 with years as the unit) and is an association, not a tradable return. |
 | Why Holm? | 14 cells were examined. A false hit is likely by chance, so we raise the bar; only Europe from 2021 clears it. |
 | Why is the restated version bigger? | What the restatement added correlates with the next return (rank correlation 0.16): it behaves as if it contains hindsight. |
-| Did the ESG floor cost anything? | Not return in this sample. It cost concentration (19 names at the 80th percentile), volatility and trading. |
-| Is the benchmark comparison fair? | Equal weight on the full panel including firms that left, no cost, as in the starter; using survivors only would raise it by about 0.6 points a year. |
+| Did the ESG floor cost anything? | Not return in this sample. It cost concentration (19 names at the 80th percentile), volatility and trading. The gain is not an ESG effect: all firms above the floor earn about the benchmark, and without 2022 every rule trails it. |
+| Why leave out formation year 2025? | It has only six months of returns. Including it lowers every rule and the benchmark by 1.6 to 2.3 points a year and keeps the ranking. |
+| Is the benchmark comparison fair? | Equal weight on the full panel including firms that left, no cost, as in the starter; using survivors only would raise it from 8.77% to 9.22% a year over 2018 to 2024. |
 | How realistic are 20 bp? | A simplification. Real costs depend on spread, size and market conditions, so net results would be lower. |
 | Could the notebook be rerun? | Yes: Colab, Runtime, Restart session and run all; a few minutes; fixed seeds and fixed cross-validation folds. |
 | What did you use AI for? | AI tools are encouraged by the lecturer. We used them for coding and reviewing; every group member can explain every cell. Keep a short log. |

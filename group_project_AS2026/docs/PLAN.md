@@ -36,7 +36,7 @@ The lecturer said there is a lot of leeway: any method is fine if it is consiste
 
 - Revenue unit problem: divide revenue and market cap by 1,000. Near-duplicate returns: keep one row per company-month.
 - Target: total 12-month return in (b), excess return in (c). Period split in (c) by formation year. Environmental score standardised within year across all firms.
-- Formation year 2025 in the backtest: either choice is fine, we must be able to defend it. Plan: keep it in the backtest (6 months) and say so, not use it for fitting.
+- Formation year 2025 in the backtest: either choice is fine, we must be able to defend it. Decided (4 Nov): left out of our backtest, because it has only 6 months of returns; including it lowers every rule and the benchmark by 1.6 to 2.3 points a year and keeps the ranking (notebook (d) Step 6).
 - Analyst_Outlook: excluded from all models, listed in the audit table and in the feature table as excluded.
 - Audit table: free choice of the headline number per problem, stating which one.
 - Memo: the 3 pages include tables and figures. Slides: number and software are free, but the talk is only 8 minutes.
