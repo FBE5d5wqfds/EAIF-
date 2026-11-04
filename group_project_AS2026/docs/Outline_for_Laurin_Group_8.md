@@ -20,7 +20,7 @@
 
 - **Four deliverables carry the group name "Group_8":** the memo PDF (name and members on page 1), the notebook, the slides PDF and results.json (the notebook writes the group name into it). Suggested file names: Group_8_memo.pdf, Group_8_notebook.ipynb, Group_8_slides.pdf, Group_8_results.json.
 - **Moodle:** memo, notebook, results.json and the peer evaluation (one form per student) by Fri 27 Nov, 23:59. Slides by Mon 7 Dec, 23:59. Questions to the lecturers go to the Moodle forum.
-- **Fabian** produces the final notebook run and results.json; **you** produce the memo and the slides; each of us fills in the peer evaluation.
+- **Fabian** has produced the final notebook run (confirmed by a fresh Colab run on 4 November) and results.json; both are in the repository folder group_project_AS2026/submission/ (Group_8_notebook.ipynb, Group_8_results.json). **You** produce the memo and the slides; each of us fills in the peer evaluation.
 
 ## 2. What earns points (rubric) and where it goes in the memo
 

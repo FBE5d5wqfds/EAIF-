@@ -12,7 +12,7 @@ STATUS = "4 November 2026"
 FOOT = "Group_8 | Status " + STATUS
 BASE_META = [["Institution", "Bern University of Applied Sciences (BFH)"], ["Course", "EAIF: AI for Finance, Autumn Semester 2026"], ["Group", GROUP]]
 DEAD = ["Key dates", "Coaching Tue 24 Nov 2026; memo, notebook, results.json and peer evaluation Fri 27 Nov 2026, 23:59; slides Mon 7 Dec 2026, 23:59; presentation Tue 8 Dec 2026"]
-SRC = ["Source of numbers", "Executed solution notebook, local run of 4 November 2026 (a fresh Colab run follows before submission)"]
+SRC = ["Source of numbers", "Executed solution notebook of 4 November 2026, confirmed by a fresh Colab run (same numbers)"]
 
 docs = [
  ("docs/Outline_for_Laurin_Group_8.pdf", "Detailed outline for Laurin", "Memo, slides, questions and peer evaluation", "EAIF Group Assignment AS 2026 | Outline for Laurin",

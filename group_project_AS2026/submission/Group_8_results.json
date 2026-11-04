@@ -1,0 +1,358 @@
+{
+  "group": "Group_8",
+  "members": [
+    "Beyeler Fabian",
+    "Lussi Laurin",
+    "Griessen Jan"
+  ],
+  "audit": [
+    {
+      "issue": "Wrong unit: revenue and market cap about 1,000 times too large for some firms",
+      "file": "firm_year_panel.csv",
+      "detected_by": "Carbon, water and energy scale with revenue within an industry; these firms sit about 1,000x below that relation",
+      "treatment": "Divide Revenue and Market_Cap by 1,000 for every row of the flagged firms",
+      "affected_ids": [
+        23,
+        30,
+        36,
+        50,
+        123,
+        177,
+        195,
+        247,
+        305,
+        406,
+        579,
+        589,
+        635,
+        638,
+        743,
+        776,
+        790,
+        915,
+        953,
+        981,
+        1022,
+        1033,
+        1075,
+        1119,
+        1120,
+        1177,
+        1274,
+        1328
+      ],
+      "affected_count": 302,
+      "effect": "Mean market cap 213,205 -> 14,108 USD million; share of the 100 largest firm-years held by these firms 100% -> 0%"
+    },
+    {
+      "issue": "Near-duplicate monthly returns (two rows per company-month, values differ by at most 0.01)",
+      "file": "stock_returns_monthly.csv",
+      "detected_by": "Duplicate (Company_ID, Month) keys; no exact duplicates",
+      "treatment": "Keep the first row per company-month",
+      "affected_ids": [],
+      "affected_count": 300,
+      "effect": "Firm-years with a full 12 holding months 9,002 -> 9,182 (181 firm-years had 13 months and were dropped)"
+    },
+    {
+      "issue": "Analyst_Outlook behaves as if stamped with future information (related to the next 12-month return)",
+      "file": "firm_year_panel.csv",
+      "detected_by": "Rank correlation with the return in three 12-month windows: only the next window is non-zero",
+      "treatment": "Exclude from every model; listed in the feature table as excluded",
+      "affected_ids": [],
+      "affected_count": 14250,
+      "effect": "Rank correlation with the next 12-month return 0.68 (other windows -0.01, 0.01); random forest test RMSE 37.59 without vs 29.14 with it (baseline 37.20)"
+    },
+    {
+      "issue": "Survivorship: universe_current.csv lists survivors only",
+      "file": "universe_current.csv",
+      "detected_by": "987 firms in the file vs 1,376 in the panel; 389 firms have a last fiscal year before 2025",
+      "treatment": "Build every sample and the benchmark on the full panel and hold exiting firms until their last month in the backtest (model fitting needs the full 12 months)",
+      "affected_ids": [],
+      "affected_count": 389,
+      "effect": "Equal-weight benchmark: 4.62% a year on the full panel vs 5.18% on survivors only (Sharpe 0.213 vs 0.248); the model samples also drop 302 firm-years of exiting firms (fewer than 12 holding months), plus 926 rows of formation year 2025 with only 6 months of returns"
+    },
+    {
+      "issue": "Restated scores behave as if they contain hindsight (not point-in-time)",
+      "file": "esg_scores_restated.csv",
+      "detected_by": "Compared with the point-in-time scores; the changes correlate with later returns (inference: hindsight)",
+      "treatment": "Use the point-in-time scores everywhere; use the restated file only for the comparison in task (c)",
+      "affected_ids": [],
+      "affected_count": 459,
+      "effect": "459 firms have every score changed (mean 5.7 points); within-year rank correlation of the Environmental score with the next excess return 0.010 (point-in-time) vs 0.056 (restated); 14% of the top-decile names change"
+    },
+    {
+      "issue": "Carbon, water and energy missing together, not at random",
+      "file": "firm_year_panel.csv",
+      "detected_by": "Missing share by region and by Environmental score",
+      "treatment": "Keep all rows; carbon intensity filled with the industry-year median plus a missing flag; raw water and energy not used",
+      "affected_ids": [],
+      "affected_count": 1887,
+      "effect": "13.2% of formation rows; Europe 6.3% vs 13.0% to 18.9% elsewhere; mean Environmental score 47.2 (missing) vs 56.5; dropping the carbon features changes the linear test RMSE 38.10 -> 38.05; dropping the rows with gaps would lose 13.2% of the sample and lift its mean Environmental score 55.3 -> 56.5"
+    },
+    {
+      "issue": "Values at the bounds: scores of exactly 0 or 100 (censoring) and monthly returns of exactly -95%",
+      "file": "firm_year_panel.csv; stock_returns_monthly.csv",
+      "detected_by": "Counts of values at the minimum and maximum, for all three score components and in the restated file",
+      "treatment": "Kept and documented; cannot be told apart from real values",
+      "affected_ids": [],
+      "affected_count": 221,
+      "effect": "Environmental 65, Social 72, Governance 77 scores at 0 or 100 (213 panel rows, 1.5%, have at least one), 8 returns at -95%; removing the 94 training rows with a clipped score changes the linear test RMSE 38.10 -> 38.00"
+    }
+  ],
+  "task_b": {
+    "target": "twelve-month total holding return in percent (July to June after formation)",
+    "test_formation_years": [
+      2022,
+      2023,
+      2024
+    ],
+    "baseline_rmse": 37.19840887818676,
+    "linear_rmse": 38.10353177095792,
+    "ensemble_rmse": 37.8381469721778,
+    "ensemble_kind": "gradient boosting",
+    "selected_on_cv": "Linear regression",
+    "test_r2": -0.5191195394473065
+  },
+  "task_c": {
+    "estimates": [
+      {
+        "region": "Africa",
+        "period": "before 2021",
+        "coef": -0.0707435001562966,
+        "se": 1.4503717757999102,
+        "n": 667
+      },
+      {
+        "region": "Asia",
+        "period": "before 2021",
+        "coef": 0.15398770600141298,
+        "se": 0.6779814104638665,
+        "n": 1686
+      },
+      {
+        "region": "Europe",
+        "period": "before 2021",
+        "coef": 0.4681182318473284,
+        "se": 0.6519272621232551,
+        "n": 1659
+      },
+      {
+        "region": "Latin America",
+        "period": "before 2021",
+        "coef": -1.1916970138283043,
+        "se": 1.0818940662682135,
+        "n": 789
+      },
+      {
+        "region": "Middle East",
+        "period": "before 2021",
+        "coef": -0.9205796872891074,
+        "se": 1.0824462498058076,
+        "n": 667
+      },
+      {
+        "region": "North America",
+        "period": "before 2021",
+        "coef": -0.4002474716909162,
+        "se": 0.7207456307994761,
+        "n": 1585
+      },
+      {
+        "region": "Oceania",
+        "period": "before 2021",
+        "coef": -0.2429953175312598,
+        "se": 0.8794206667103123,
+        "n": 829
+      },
+      {
+        "region": "Africa",
+        "period": "from 2021",
+        "coef": 0.7489221427655847,
+        "se": 1.427928868239989,
+        "n": 344
+      },
+      {
+        "region": "Asia",
+        "period": "from 2021",
+        "coef": 0.3941773554006291,
+        "se": 0.9567870571704831,
+        "n": 817
+      },
+      {
+        "region": "Europe",
+        "period": "from 2021",
+        "coef": 3.0792127382353254,
+        "se": 0.9585722293004619,
+        "n": 814
+      },
+      {
+        "region": "Latin America",
+        "period": "from 2021",
+        "coef": -2.938879090364769,
+        "se": 1.65936009075692,
+        "n": 390
+      },
+      {
+        "region": "Middle East",
+        "period": "from 2021",
+        "coef": 0.2800416070021292,
+        "se": 1.5656426477580396,
+        "n": 340
+      },
+      {
+        "region": "North America",
+        "period": "from 2021",
+        "coef": -0.6146541206742335,
+        "se": 1.19206362635687,
+        "n": 757
+      },
+      {
+        "region": "Oceania",
+        "period": "from 2021",
+        "coef": -0.8015240940445546,
+        "se": 1.3308846098145202,
+        "n": 408
+      }
+    ],
+    "restated": [
+      {
+        "region": "Africa",
+        "period": "before 2021",
+        "coef": 0.926673089291872,
+        "se": 1.3783644862707394,
+        "n": 667
+      },
+      {
+        "region": "Asia",
+        "period": "before 2021",
+        "coef": 1.0554744642739315,
+        "se": 0.6724639677087716,
+        "n": 1686
+      },
+      {
+        "region": "Europe",
+        "period": "before 2021",
+        "coef": 1.5850625518739387,
+        "se": 0.676389436989991,
+        "n": 1659
+      },
+      {
+        "region": "Latin America",
+        "period": "before 2021",
+        "coef": -0.04928632851066661,
+        "se": 1.1357278232935477,
+        "n": 789
+      },
+      {
+        "region": "Middle East",
+        "period": "before 2021",
+        "coef": 0.4332608555585742,
+        "se": 1.1112284720707601,
+        "n": 667
+      },
+      {
+        "region": "North America",
+        "period": "before 2021",
+        "coef": 0.9310750049963844,
+        "se": 0.7131224895956727,
+        "n": 1585
+      },
+      {
+        "region": "Oceania",
+        "period": "before 2021",
+        "coef": 0.7302502548348757,
+        "se": 0.8699608708740675,
+        "n": 829
+      },
+      {
+        "region": "Africa",
+        "period": "from 2021",
+        "coef": 2.3975283273667234,
+        "se": 1.2491776374426216,
+        "n": 344
+      },
+      {
+        "region": "Asia",
+        "period": "from 2021",
+        "coef": 1.9496594101320366,
+        "se": 0.9426543297112046,
+        "n": 817
+      },
+      {
+        "region": "Europe",
+        "period": "from 2021",
+        "coef": 4.876740591336056,
+        "se": 0.9004893124821395,
+        "n": 814
+      },
+      {
+        "region": "Latin America",
+        "period": "from 2021",
+        "coef": -1.326499145562516,
+        "se": 1.7652151744101137,
+        "n": 390
+      },
+      {
+        "region": "Middle East",
+        "period": "from 2021",
+        "coef": 2.746435782322517,
+        "se": 1.5537781985448578,
+        "n": 340
+      },
+      {
+        "region": "North America",
+        "period": "from 2021",
+        "coef": 0.9913108469419122,
+        "se": 1.211112256442757,
+        "n": 757
+      },
+      {
+        "region": "Oceania",
+        "period": "from 2021",
+        "coef": 0.7914725876014256,
+        "se": 1.3109387580634084,
+        "n": 408
+      }
+    ],
+    "conclusion": "An investor could have earned an ESG premium only in firms in Europe, from 2021 (+3.1 points of 12-month excess return per standard deviation of the Environmental score; Holm-adjusted p = 0.018 with errors clustered by company, but p = 0.09 with its 4 formation years as the unit); no other region or period is distinguishable from zero, so this is a plausible, not a proven, premium, and it is a cross-sectional association, not a return shown to be tradable after costs."
+  },
+  "task_d": {
+    "rules": [
+      {
+        "name": "Linear regression (selected), no floor",
+        "ann_return_pct": 9.38574073426488,
+        "ann_vol_pct": 16.800133264421657,
+        "sharpe": 0.45720927267720246,
+        "turnover": 0.7032154855223165
+      },
+      {
+        "name": "Linear regression (selected), floor 50th pct",
+        "ann_return_pct": 9.592502260257074,
+        "ann_vol_pct": 17.07713336163127,
+        "sharpe": 0.4638034422970077,
+        "turnover": 0.7645037663539052
+      },
+      {
+        "name": "Linear regression (selected), floor 80th pct",
+        "ann_return_pct": 11.391268362868656,
+        "ann_vol_pct": 18.375786178089967,
+        "sharpe": 0.532556238956076,
+        "turnover": 0.8228905597326649
+      },
+      {
+        "name": "Equal-weight benchmark (all firms)",
+        "ann_return_pct": 8.767632190627417,
+        "ann_vol_pct": 17.12143580925444,
+        "sharpe": 0.41890540560267636,
+        "turnover": 0.16725070873746192
+      }
+    ],
+    "bootstrap": {
+      "statistic": "Sharpe ratio difference, Linear regression (selected), floor 80th pct minus equal-weight benchmark; 84 months resampled with replacement, 5,000 draws, seed 12345, 95% percentile interval",
+      "point": 0.1136508333533996,
+      "lo": -0.16180402009002212,
+      "hi": 0.38069036856367333
+    },
+    "universe": "full panel including firms that left"
+  }
+}

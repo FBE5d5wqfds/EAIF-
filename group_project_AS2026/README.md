@@ -9,6 +9,7 @@ https://github.com/umatter/EDFB/tree/main/data/esg2026; a copy is in `../data/es
 | `notebook/` | `Group_Work_AS_2026_solution.ipynb`: the starter notebook with our own cells for tasks (a) to (d) below Section 5 |
 | `results_sheets/` | One PDF per task (a to d): results, meaning for an investor, suggested memo and slide text, plain-language guide, likely questions; `figures/` holds the notebook's figures for the memo and slides |
 | `docs/` | Assignment handouts, group plan, team briefing, coaching question sheet and explainer, and `Outline_for_Laurin_Group_8` (detailed memo, slide and Q&A outline) |
+| `submission/` | Files to hand in: `Group_8_notebook.ipynb` (executed; same numbers as a fresh Colab run on 4 Nov 2026) and `Group_8_results.json` |
 | `build/` | Sources that build the notebook cells and every PDF (see below); `assets/` holds the fonts and logo for the BFH layout |
 
 Open the notebook in Colab:
