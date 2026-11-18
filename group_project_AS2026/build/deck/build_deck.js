@@ -123,13 +123,13 @@ qs.forEach(([q, sub], i) => {
 });
 const sx = 7.75, sw = 2.35, sh = 2.45, gap = 0.3;
 statCard(s, "stat-firms", sx, 1.6, sw, sh, "1,376", "firms, fiscal years 2012 to 2025 (389 leave early)");
-statCard(s, "stat-months", sx + sw + gap, 1.6, sw, sh, "171,764", "monthly stock returns (firm-months)");
+statCard(s, "stat-months", sx + sw + gap, 1.6, sw, sh, "84 months", "backtest, July 2018 to June 2025 (rules after costs)");
 statCard(s, "stat-files", sx, 1.6 + sh + gap, sw, sh, "5 files", "firm-year panel, restated ESG scores, monthly returns, factors, current universe");
 statCard(s, "stat-sim", sx + sw + gap, 1.6 + sh + gap, sw, sh, "Simulated", "no real firms: the exercise tests our method, not the market", DK);
 s.addNotes(
   "About 55 seconds. We asked four questions: can the data be trusted, can a model forecast twelve-month returns better than the average, " +
   "where (if anywhere) was the Environmental score associated with higher returns, and does a trading rule with costs and an ESG floor beat an equal-weight benchmark. " +
-  "The data is simulated by the course: 1,376 firms over fiscal years 2012 to 2025, five files, about 172,000 monthly returns. " +
+  "The data is simulated by the course: 1,376 firms over fiscal years 2012 to 2025, five files; our backtest covers 84 months, July 2018 to June 2025. " +
   "Because it is simulated, the exercise tests our method, not how ESG behaves in real markets. The dataset is cited at the bottom of every slide with its CC BY 4.0 licence."
 );
 
